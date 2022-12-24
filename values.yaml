@@ -31,7 +31,7 @@ nginx:
       mountPath: /var/www/html
 
   healthcheck:
-    enabled: false
+    enabled: true
     period: 5
 
 service:
@@ -55,7 +55,7 @@ ingress:
 scheduler:
   # When enabling it, the chart will deploy a sidecar container in the same pod that
   # will run the "schedule:run" command each minute.
-  enabled: false
+  enabled: true
 
   command:
     - php
