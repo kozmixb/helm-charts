@@ -5,23 +5,13 @@ metadata:
   labels:
     {{- include "laravel.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
-  {{- end }}
-  {{- with .Values.strategy }}
-  strategy:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
   selector:
     matchLabels:
       {{- include "laravel.selectorLabels" . | nindent 6 }}
       laravel.com/pod-type: web
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       labels:
         {{- include "laravel.selectorLabels" . | nindent 8 }}
         laravel.com/pod-type: web
@@ -29,44 +19,9 @@ spec:
       volumes:
         - name: app
           emptyDir: {}
-        - name: env
-          secret:
-            secretName: {{ if .Values.app.envSecretName }} {{ .Values.app.envSecretName }} {{ else }} {{ .Release.Name }}-env {{ end }}
-        - name: nginx-config
-          configMap:
-            name: {{ if .Values.nginx.configName }} {{ .Values.nginx.configName }} {{ else }} {{ .Release.Name }}-nginx-config {{ end }}
-        - name: php-ini-config
-          configMap:
-            name: {{ if .Values.phpIni.configName }} {{ .Values.phpIni.configName }} {{ else }} {{ .Release.Name }}-php-ini-config {{ end }}
-        - name: php-fpm-config
-          configMap:
-            name: {{ if .Values.phpFpmConf.configName }} {{ .Values.phpFpmConf.configName }} {{ else }} {{ .Release.Name }}-php-fpm-config {{ end }}
-        {{- with .Values.extraVolumes }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
-
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-
-      serviceAccountName: {{ include "laravel.serviceAccountName" . }}
-
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
-
-      {{- with .Values.extraInitContainers }}
-      initContainers:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
 
       containers:
-        {{- with .Values.extraContainers }}
-        {{- toYaml . | nindent 8 }}
-        {{- end }}
         - name: php-fpm
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.app.image.pullPolicy }}
           volumeMounts:
@@ -115,8 +70,6 @@ spec:
                   - cp /tmp/.env /var/www/html/.env && cp -r /var/www/html/. /app && cd /var/www/html && sh deploy.sh
         {{- if .Values.scheduler.enabled }}
         - name: scheduler
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.app.image.pullPolicy }}
           command:
@@ -162,8 +115,6 @@ spec:
                   - cp /tmp/.env /var/www/html/.env && cp -r /var/www/html/. /app && cd /var/www/html && sh deploy.sh
         {{- end }}
         - name: nginx
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.nginx.image.repository }}:{{ .Values.nginx.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.nginx.image.pullPolicy }}
           volumeMounts:
@@ -200,8 +151,6 @@ spec:
             {{- toYaml .Values.nginx.resources | nindent 12 }}
         {{- if .Values.app.exporter.enabled }}
         - name: php-fpm-metrics
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.app.exporter.image.repository }}:{{ .Values.app.exporter.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.app.exporter.image.pullPolicy }}
           readinessProbe:
@@ -240,8 +189,6 @@ spec:
         {{- end }}
         {{- if .Values.nginx.exporter.enabled }}
         - name: nginx-metrics
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.nginx.exporter.image.repository }}:{{ .Values.nginx.exporter.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.nginx.exporter.image.pullPolicy }}
           readinessProbe:
@@ -274,18 +221,3 @@ spec:
           resources:
             {{- toYaml .Values.nginx.exporter.resources | nindent 12 }}
         {{- end }}
-
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
