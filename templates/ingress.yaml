@@ -23,9 +23,6 @@ spec:
       secretName: {{ .secretName }}
     {{- end }}
   {{- end }}
-  {{- if .Values.ingress.class }}
-  ingressClassName: {{ .Values.ingress.class }}
-  {{- end }}
   rules:
     {{- range .Values.ingress.hosts }}
     - host: {{ .host | quote }}
@@ -41,4 +38,3 @@ spec:
                   number: {{ $svcPort }}
           {{- end }}
     {{- end }}
-  {{- end }}
