@@ -45,4 +45,3 @@ Selector labels
 app.kubernetes.io/name: {{ include "laravel.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
-
