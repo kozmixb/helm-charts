@@ -1,9 +1,12 @@
 replicaCount: 1
 
+
 volumes:
   - name: app
     hostPath:
-      path: ../lsapp
+      path: /run/desktop/mnt/host/wsl/c/Users/kozmi/Documents/github/lsapp
+      # path: /run/desktop/mnt/host/c/Users/kozmi/Documents/github/lsapp
+      # path: /mnt/wsl/c/Users/kozmi/Documents/github/lsapp
 
 # Configure Laravel PHP-FPM container.
 app:
@@ -13,8 +16,8 @@ app:
     tag: "latest"
 
   volumeMounts:
-    - name: app
-      mountPath: /var/www/html
+    # - name: app
+    #   mountPath: /var/www/html
 
   healthcheck:
     enabled: true
@@ -26,9 +29,9 @@ nginx:
     pullPolicy: IfNotPresent
     tag: "latest"
 
-  volumeMounts:
-    - name: app
-      mountPath: /var/www/html
+  volumeMounts: 
+    # - name: app
+    #   mountPath: /var/www/html
 
   healthcheck:
     enabled: true
