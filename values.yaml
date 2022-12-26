@@ -4,9 +4,7 @@ replicaCount: 1
 volumes:
   - name: app
     hostPath:
-      path: /run/desktop/mnt/host/wsl/c/Users/kozmi/Documents/github/lsapp
-      # path: /run/desktop/mnt/host/c/Users/kozmi/Documents/github/lsapp
-      # path: /mnt/wsl/c/Users/kozmi/Documents/github/lsapp
+      path: /run/desktop/mnt/host/c/users/kozmi/Documents/github/lsapp
 
 # Configure Laravel PHP-FPM container.
 app:
@@ -16,8 +14,8 @@ app:
     tag: "latest"
 
   volumeMounts:
-    # - name: app
-    #   mountPath: /var/www/html
+    - name: app
+      mountPath: /var/www/html
 
   healthcheck:
     enabled: true
@@ -30,8 +28,8 @@ nginx:
     tag: "latest"
 
   volumeMounts: 
-    # - name: app
-    #   mountPath: /var/www/html
+    - name: app
+      mountPath: /var/www/html
 
   healthcheck:
     enabled: true
@@ -43,8 +41,8 @@ service:
 
 ingress:
   enabled: true
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
+  annotations: 
+    kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
     - host: test.dev
@@ -58,7 +56,7 @@ ingress:
 scheduler:
   # When enabling it, the chart will deploy a sidecar container in the same pod that
   # will run the "schedule:run" command each minute.
-  enabled: true
+  enabled: false
 
   command:
     - php
@@ -70,5 +68,5 @@ scheduler:
       mountPath: /var/www/html
 
   healthcheck:
-    enabled: true
+    enabled: false
     period: 5
