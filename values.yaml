@@ -4,7 +4,10 @@ replicaCount: 1
 volumes:
   - name: app
     hostPath:
+      # For windows you will need prefix of /run/desktop/mnt/host/
       path: /run/desktop/mnt/host/c/users/kozmi/Documents/github/lsapp
+      # For linux and mac
+      # path: /home/kozmi/documents/github/lsapp
 
 # Configure Laravel PHP-FPM container.
 app:
