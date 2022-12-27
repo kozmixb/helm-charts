@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "laravel.fullname" . }}
-  namespace: {{ include "laravel.name" . }}
+  namespace: {{ .Values.namespace }}
   labels:
     {{- include "laravel.labels" . | nindent 4 }}
 spec:
