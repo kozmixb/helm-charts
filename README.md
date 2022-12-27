@@ -7,5 +7,5 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/cont
 
 cert-manager.io
 ```
-kubectl apply --validate=false -f https://github.com/cert-manager/cert-manager/releases/download/v0.14.3/cert-manager.crds.yaml
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.10.1/cert-manager.yaml
 ```

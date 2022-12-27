@@ -9,7 +9,7 @@ Before applying the config, cert-manager custom resources needs to be imported
 
 cert-manager.io
 ```
-kubectl apply --validate=false -f https://github.com/cert-manager/cert-manager/releases/download/v0.14.3/cert-manager.crds.yaml
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.10.1/cert-manager.yaml
 ```
 
 Once it is done, make sure `EMAIL_ADDRESS` field is pointing to a valid email address
@@ -21,7 +21,7 @@ kubectl apply -f letsencrypt-prod.yaml
 
 ## How to use
 
-To use this cert you need to include 
+To use this cert you need to include in your ingress config file 
 
 ```
 metadata:
