@@ -29,7 +29,7 @@ spec:
             - name: php-fpm
               containerPort: 9000
               protocol: TCP
-          {{- if .Values.app.healthcheck.enabled }}
+          {{- if and .Values.healthcheck .Values.app.healthcheck.enabled }}
           readinessProbe:
             tcpSocket:
               port: 9000
@@ -49,7 +49,7 @@ spec:
             {{- toYaml .Values.scheduler.command | nindent 12 }}
           volumeMounts:
             {{- toYaml .Values.scheduler.volumeMounts | nindent 12 }}
-          {{- if .Values.scheduler.healthcheck.enabled }}
+          {{- if and .Values.healthcheck .Values.scheduler.healthcheck.enabled }}
           readinessProbe:
             exec:
               command:
@@ -75,7 +75,7 @@ spec:
             - name: http
               containerPort: 80
               protocol: TCP
-          {{- if .Values.nginx.healthcheck.enabled }}
+          {{- if and .Values.healthcheck .Values.nginx.healthcheck.enabled }}
           readinessProbe:
             exec:
               command:
