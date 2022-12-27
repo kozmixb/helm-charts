@@ -1,3 +1,4 @@
+### GENERAL ###
 namespace: test-app
 replicaCount: 1
 healthcheck: false
@@ -9,35 +10,6 @@ volumes:
       path: /run/desktop/mnt/host/c/users/kozmi/Documents/github/lsapp
       # For linux and mac
       # path: /home/kozmi/documents/github/lsapp
-
-# Configure Laravel PHP-FPM container.
-app:
-  image:
-    repository: bencejob/laravel-php74
-    pullPolicy: IfNotPresent
-    tag: "latest"
-
-  volumeMounts:
-    - name: app
-      mountPath: /var/www/html
-
-  healthcheck:
-    enabled: true
-    period: 5
-
-nginx:
-  image:
-    repository: bencejob/laravel-nginx
-    pullPolicy: IfNotPresent
-    tag: "latest"
-
-  volumeMounts: 
-    - name: app
-      mountPath: /var/www/html
-
-  healthcheck:
-    enabled: true
-    period: 5
 
 service:
   type: ClusterIP
@@ -58,20 +30,40 @@ ingress:
   #   hosts:
   #     - chart-example.local
 
-scheduler:
-  # When enabling it, the chart will deploy a sidecar container in the same pod that
-  # will run the "schedule:run" command each minute.
-  enabled: true
+### APPLICATIONS ###
+app:
+  image:
+    repository: bencejob/laravel-php74
+    pullPolicy: IfNotPresent
+    tag: "latest"
+  volumeMounts:
+    - name: app
+      mountPath: /var/www/html
+  healthcheck:
+    enabled: true
+    period: 5
 
+nginx:
+  image:
+    repository: bencejob/laravel-nginx
+    pullPolicy: IfNotPresent
+    tag: "latest"
+  volumeMounts: 
+    - name: app
+      mountPath: /var/www/html
+  healthcheck:
+    enabled: true
+    period: 5
+
+scheduler:
+  enabled: false
   command:
     - php
     - artisan
     - queue:work
-
   volumeMounts:
     - name: app
       mountPath: /var/www/html
-
   healthcheck:
     enabled: true
     period: 5
