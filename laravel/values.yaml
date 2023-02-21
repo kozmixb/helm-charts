@@ -1,15 +1,7 @@
 ### GENERAL ###
-namespace: test-app
+namespace: laravel
 replicaCount: 1
 healthcheck: false
-
-volumes:
-  - name: app
-    hostPath:
-      # For windows you will need prefix of /run/desktop/mnt/host/
-      path: /run/desktop/mnt/host/c/users/kozmi/Documents/github/lsapp
-      # For linux and mac
-      # path: /home/kozmi/documents/github/lsapp
 
 service:
   type: ClusterIP
@@ -24,10 +16,6 @@ ingress:
     - host: test.dev
       paths:
         - /
-  tls:
-  - secretName: test-app-tls
-    hosts:
-      - test.dev
 
 ### APPLICATIONS ###
 app:
@@ -35,9 +23,6 @@ app:
     repository: bencejob/laravel-php74
     pullPolicy: IfNotPresent
     tag: "latest"
-  volumeMounts:
-    - name: app
-      mountPath: /var/www/html
   healthcheck:
     enabled: true
     period: 5
@@ -47,9 +32,6 @@ nginx:
     repository: bencejob/laravel-nginx
     pullPolicy: IfNotPresent
     tag: "latest"
-  volumeMounts: 
-    - name: app
-      mountPath: /var/www/html
   healthcheck:
     enabled: true
     period: 5
@@ -60,9 +42,6 @@ scheduler:
     - php
     - artisan
     - queue:work
-  volumeMounts:
-    - name: app
-      mountPath: /var/www/html
   healthcheck:
     enabled: true
     period: 5

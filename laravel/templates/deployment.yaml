@@ -17,14 +17,10 @@ spec:
         {{- include "laravel.selectorLabels" . | nindent 8 }}
         laravel.com/pod-type: web
     spec:
-      volumes:
-        {{- toYaml .Values.volumes | nindent 8 }}
       containers:
         - name: php-fpm
           image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.app.image.pullPolicy }}
-          volumeMounts:
-            {{- toYaml .Values.app.volumeMounts | nindent 12 }}
           ports:
             - name: php-fpm
               containerPort: 9000
@@ -47,8 +43,6 @@ spec:
           imagePullPolicy: {{ .Values.app.image.pullPolicy }}
           command:
             {{- toYaml .Values.scheduler.command | nindent 12 }}
-          volumeMounts:
-            {{- toYaml .Values.scheduler.volumeMounts | nindent 12 }}
           {{- if and .Values.healthcheck .Values.scheduler.healthcheck.enabled }}
           readinessProbe:
             exec:
@@ -69,8 +63,6 @@ spec:
         - name: nginx
           image: "{{ .Values.nginx.image.repository }}:{{ .Values.nginx.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.nginx.image.pullPolicy }}
-          volumeMounts:
-            {{- toYaml .Values.nginx.volumeMounts | nindent 12 }}
           ports:
             - name: http
               containerPort: 80

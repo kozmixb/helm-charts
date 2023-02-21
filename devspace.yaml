@@ -1,0 +1,29 @@
+version: v2beta1
+name: dev
+
+images:
+  laravel:
+    image: bencejob/helm-laravel
+    dockerfile: laravel/Dockerfile
+    context: laravel/
+
+deployments:
+  laravel:
+    namespace: laravel
+    helm:
+      chart:
+        path: laravel/
+      values:
+        namespace: laravel
+        app:
+          image:
+            repository: ${runtime.images.laravel.image}
+            tag: ${runtime.images.laravel.tag}
+
+dev:
+  laravel:
+    namespace: laravel
+    imageSelector: bencejob/helm-laravel
+    sync:
+      - path: ./laravel:/var/www/html
+
